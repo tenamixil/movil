@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Reproductor</title>
+  <!-- Opcional: estilos base para el contenedor -->
+  <style>
+    body { margin: 0; background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <!-- El reproductor se inyectará automáticamente desde reproductor.js -->
+  
+  <!-- Cargamos el script del reproductor (debe estar en la misma ruta o CDN) -->
+  <script src="reproductor.js"></script>
+
+  <!-- Script de inicialización con tus episodios -->
+  <script>
+    // Esperamos a que la API esté disponible
+    function iniciar() {
+      if (window.playerAPI) {
+        // Definimos los episodios con TODOS LOS CAMPOS
+        const misEpisodios = [
+          {
+            id: 'ep1',
+            title: 'El futuro de la inteligencia artificial',
+            artist: 'Revista Nexos',
+            cover: 'https://picsum.photos/id/1015/400/400',
+            audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            video: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+            duration: 360,
+            transcript: 'Transcripción completa del episodio...',
+            serie: 'Tecnología y Sociedad',
+            color: '#0da6f2'
+          },
+          {
+            id: 'ep2',
+            title: 'Entrevista con Julieta Venegas',
+            artist: 'Música y Letras',
+            cover: 'https://picsum.photos/id/1043/400/400',
+            audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+            video: '',
+            duration: 480,
+            transcript: 'Julieta nos cuenta...',
+            serie: 'Entrevistas',
+            color: '#f29c0d'
+          }
+        ];
+
+        // Cargar los episodios en el reproductor (empezar por el índice 0)
+        window.playerAPI.load(misEpisodios, 0);
+        
+        // Opcional: expandir automáticamente
+        // window.playerAPI.expand();
+      } else {
+        setTimeout(iniciar, 100); // reintentar hasta que la API esté lista
+      }
+    }
+
+    iniciar();
+  </script>
+</body>
+</html>
