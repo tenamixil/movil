@@ -1,1 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Demo Reproductor Universal</title>
+  <style>
+    /* Estilos mínimos para el contenido de ejemplo */
+    body {
+      margin: 0;
+      background: #0a0c0f;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+      padding-bottom: 100px; /* espacio para el miniplayer */
+    }
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .episode-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .episode-card img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .episode-card h3 {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+    }
+    .episode-card p {
+      margin: 0;
+      font-size: 13px;
+      color: #aaa;
+    }
+    button {
+      background: #ff0000;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-weight: bold;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎧 Demostración del Reproductor</h2>
+  <p>Haz clic en cualquier episodio para reproducirlo. El reproductor aparecerá abajo.</p>
 
+  <div class="episode-list" id="episodeList">
+    <!-- Los episodios se generarán con JS -->
+  </div>
+
+  <!-- Incluimos el reproductor (asegúrate de que player.js esté en la misma carpeta) -->
+  <script src="/movil/player.js"></script>
+
+  <script>
+    // Datos de ejemplo (simulan episodios de podcast)
+    const episodes = [
+      {
+        title: 'El futuro de la inteligencia artificial',
+        artist: 'Ana López',
+        cover: 'https://picsum.photos/id/1/200/200',
+        audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+        video: '', // sin video
+        color: '#1a3b5c',
+        text: 'En este episodio hablamos sobre los avances en IA y su impacto en la sociedad. Una charla fascinante con invitados expertos.',
+        detailUrl: '#',
+        allowDownload: true,
+        next: [] // se llenará después
+      },
+      {
+        title: 'Viaje a Marte: ¿realidad o ficción?',
+        artist: 'Carlos Méndez',
+        cover: 'https://picsum.photos/id/1043/200/200',
+        audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+        video: '',
+        color: '#8B4513',
+        text: 'Analizamos los planes de la NASA y SpaceX para llevar humanos al planeta rojo. ¿Cuándo será posible?',
+        detailUrl: '#',
+        allowDownload: true
+      },
+      {
+        title: 'Música clásica para concentrarse',
+        artist: 'Orquesta Filarmónica',
+        cover: 'https://picsum.photos/id/15/200/200',
+        audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+        video: '',
+        color: '#2c3e50',
+        text: 'Selección de piezas clásicas ideales para estudiar o trabajar. Incluye Mozart, Beethoven y Chopin.',
+        detailUrl: '#',
+        allowDownload: true
+      }
+    ];
+
+    // Construir la lista de episodios en el HTML
+    const listContainer = document.getElementById('episodeList');
+    episodes.forEach((ep, index) => {
+      const card = document.createElement('div');
+      card.className = 'episode-card';
+      card.innerHTML = `
+        <img src="${ep.cover}" alt="${ep.title}">
+        <div style="flex:1">
+          <h3>${ep.title}</h3>
+          <p>${ep.artist}</p>
+          <button data-index="${index}">Reproducir</button>
+        </div>
+      `;
+      listContainer.appendChild(card);
+    });
+
+    // Asignar eventos a los botones
+    document.querySelectorAll('.episode-card button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const index = e.target.dataset.index;
+        // Cargar el episodio en el reproductor
+        if (window.playerAPI) {
+          // Si queremos cargar un único episodio y establecer los siguientes
+          // podemos pasar un array con todos como lista de reproducción
+          window.playerAPI.load(episodes, parseInt(index));
+          // Opcional: expandir automáticamente
+          // window.playerAPI.expand();
+        } else {
+          alert('El reproductor aún no está listo. Espera un momento.');
+        }
+      });
+    });
+
+    // También podemos precargar la lista al inicio (opcional)
+    window.addEventListener('load', () => {
+      if (window.playerAPI) {
+        // Cargar todos los episodios, empezando por el primero
+        window.playerAPI.load(episodes, 0);
+      }
+    });
+  </script>
+
+  <!-- Pequeña ayuda para usuarios de escritorio -->
+  <div style="text-align: center; margin-top: 30px; font-size: 14px; color: #666;">
+    💡 En móvil se ve mejor. Redimensiona la ventana o usa el modo dispositivo.
+  </div>
+</body>
+</html>
